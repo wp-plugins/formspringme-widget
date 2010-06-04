@@ -1,12 +1,64 @@
 <?php
 /**
-Plugin Name: FormSpring.me Widget
+Plugin Name: Formspring.me Widget
 Plugin URI: http://www.noahcoffey.com/formspring-wordpress-widget
 Description: Adds a Formspring.me question box to your sidebar.
-Version: 0.1
+Version: 0.3
 Author: Noah Coffey
 Author URI: http://www.noahcoffey.com
 **/
+
+
+// [formspring]
+function formspring_func($atts) {
+	extract(shortcode_atts(array(
+		'username' => 'formspringapi',
+		'questions' => '5',
+		'ask' => 'no',
+	), $atts));
+		
+	echo '<link type="text/css" rel="stylesheet" href="' . get_bloginfo('wpurl') . '/wp-content/plugins/formspringme-widget/fsmWidget.css" />' . "\n";
+
+	if ($ask=="yes"){
+		$fsmSize = 		"large";
+		$fsmWidth =		"400px";
+		$fsmHeight =	"200px";
+	
+		echo '<iframe src="http://www.formspring.me/widget/view/'.$username.'?&size='.$fsmSize.'&bgcolor='.$fsmBGColor.'&fgcolor='.$fsmFGColor.'" frameborder="0" scrolling="no" width="'.$fsmWidth.'" height="'.$fsmHeight.'" style="border:none;padding:0;margin:0;"><a href="http://www.formspring.me/'.$username.'">http://www.formspring.me/'.$username.'</a></iframe>';
+
+	}
+	
+
+?>
+<?php // Get RSS Feed(s)
+include_once(ABSPATH . WPINC . '/feed.php');
+
+// Get a SimplePie feed object from the specified feed source.
+$rss = fetch_feed("http://www.formspring.me/profile/{$username}.rss");
+if (!is_wp_error( $rss ) ) : // Checks that the object is created correctly 
+    // Figure out how many total items there are 
+    $maxitems = $rss->get_item_quantity($questions); 
+
+    // Build an array of all the items, starting with element 0 (first element).
+    $rss_items = $rss->get_items(0, $maxitems); 
+endif;
+?>
+
+<div class="fsquestions">
+    <?php if ($maxitems == 0) echo '<li>No questions.</li>';
+    else
+    // Loop through each feed item and display each item as a hyperlink.
+    foreach ( $rss_items as $item ) : ?>
+    	<div class="qa">
+	        <div class="question"><?php echo $item->get_title(); ?></div>
+	        <div class="answer"><?php echo $item->get_content(); ?></div>
+		</div>
+    <?php endforeach; ?>
+</div>
+<?php
+}
+
+add_shortcode('formspring', 'formspring_func');
 
 
 add_action( 'widgets_init', 'fsm_load_widgets' );

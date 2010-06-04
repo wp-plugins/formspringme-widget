@@ -1,0 +1,32 @@
+.fsquestions
+{
+
+}
+
+.fsquestions .qa
+{
+	font-family: Helvetica, Arial, "Trebuchet MS", san-serif;
+	padding:10px 10px 10px 15px;
+	margin:10px 0;
+	background-image: url(images/fsbox.png);
+	background-repeat: no-repeat;
+
+}
+
+.fsquestions .qa .question
+{
+	font-size: 14px;
+	font-weight: bold;
+	border-bottom:2px solid #fff;
+	margin-bottom:6px;
+	padding-bottom:6px;
+	color: #3b6f93;
+	text-align: left;
+}
+
+.fsquestions .qa .answer
+{
+	color: #555;
+	text-align: left;
+
+}
